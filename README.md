@@ -24,43 +24,45 @@ Have you ever struggled with managing various screen states in your SwiftUI apps
 
 ```swift
 // Create a ViewModel inheriting from BaseViewModel
-class MyScreenViewModel: BaseViewModel {
+final class ExampleViewModel: BaseViewModel {
     // Make your network call here and set the state accordingly
-    func fetchData() {
-        setState(.loading(message: "Fetching data..."))
+    func fetchComments() {
+        self.state = .Loading(item: .init(title: "Fetching comments please wait..."))
         
-        // Simulate network call (replace with your actual API call)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            let success = Bool.random()
-            if success {
-                self.setState(.success)
-            } else {
-                self.setState(.error(message: "Failed to fetch data!", retryAction: {
-                    self.fetchData() // Retry action on error
-                }))
-            }
+        // Simulated network call (replace with your actual API call)
+        let response = ["I love this library 😊", "Very useful solution 👏", "I ♥️ SwiftUI"]
+        
+        // 5 Second delay
+        DelayedMainThread {
+            self.state = .Initial // reset state
+            self.comments = response
         }
     }
 }
 
 // In your SwiftUI view:
-struct MyScreenView: View {
-    @StateObject private var viewModel = MyScreenViewModel()
+struct ExampleView: View {
+    @StateObject private var viewModel = ExampleViewModel()
+    
+    init(viewModel: ExampleViewModel = ExampleViewModel()) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
-        VStack {
-            switch viewModel.viewState {
-            case .loading(let message):
-                ProgressView(message)
-            case .error(let message, let retryAction):
-                ErrorView(message, onRetry: retryAction)
-            case .success:
-                Text("Data fetched successfully!")
+        ZStack {
+            Color.white
+            
+            VStack {
+                ForEach(viewModel.comments, id: \.self) { comment in
+                    Text(comment)
+                        .font(.title)
+                }
             }
         }
         .onAppear {
-            viewModel.fetchData()
+            viewModel.fetchComments()
         }
+        .viewState($viewModel.state) // Add viewState modifier bottom of your view
     }
 }
 ```
