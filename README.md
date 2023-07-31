@@ -67,6 +67,13 @@ struct ExampleView: View {
 }
 ```
 
+## Demo
+
+
+https://github.com/alperozturk96/SwiftyStates/assets/67455295/db1aec09-4d11-4ef2-a024-13957912a9d0
+
+
+
 **SwiftyStates** makes your app shine with clean and maintainable code, seamless network calls, and outstanding error handling. Say hello to happy coding and happy users!
 
 Are you ready to elevate your SwiftUI app to the next level with SwiftyStates? Start using SwiftyStates today and unlock the full potential of state management! 🚀✨
